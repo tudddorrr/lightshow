@@ -1,0 +1,160 @@
+[
+  {
+    "label": "Leather Teeth",
+    "colour": "rgb(200, 40, 180)",
+    "loop": false,
+    "actions": [
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/100/100/9000",
+        "delay": 100
+      },
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/100/10/9000",
+        "delay": 200
+      },
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/100/100/9000",
+        "delay": 300
+      },
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/0/10/9000",
+        "delay": 400
+      },
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/0/100/9000",
+        "delay": 500
+      },
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/0/10/9000",
+        "delay": 600
+      },
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/100/100/9000",
+        "delay": 700
+      },
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/100/10/9000",
+        "delay": 800
+      },
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/100/100/9000",
+        "delay": 900
+      },
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/100/10/9000",
+        "delay": 1000
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/100/10/9000",
+        "delay": 100
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/100/100/9000",
+        "delay": 200
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/100/10/9000",
+        "delay": 300
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/0/100/9000",
+        "delay": 400
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/0/10/9000",
+        "delay": 500
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/0/100/9000",
+        "delay": 600
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/100/10/9000",
+        "delay": 700
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/100/100/9000",
+        "delay": 800
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/100/10/9000",
+        "delay": 900
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/100/100/9000",
+        "delay": 1000
+      }
+    ]
+  },
+  {
+    "label": "Red",
+    "colour": "rgb(200, 0, 0)",
+    "loop": false,
+    "actions": [
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/100/100/9000",
+        "delay": 0
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "0/100/0/9000",
+        "delay": 0
+      }
+    ]
+  },
+  {
+    "label": "Purple",
+    "colour": "rgb(150, 50, 200)",
+    "loop": false,
+    "actions": [
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/100/0/9000",
+        "delay": 0
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "260/100/100/9000",
+        "delay": 0
+      }
+    ]
+  },
+  {
+    "label": "White",
+    "colour": "rgb(150, 150, 150)",
+    "loop": false,
+    "actions": [
+      {
+        "light": "Tudor's Bedside",
+        "colour": "0/0/100/9000",
+        "delay": 0
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": "0/0/100/9000",
+        "delay": 0
+      }
+    ]
+  }
+]
