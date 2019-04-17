@@ -7,13 +7,16 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/slider": "^1.0.4",
     "buffer": "^5.2.1",
     "randomcolor": "^0.5.4",
     "react": "16.8.3",
     "react-native": "0.59.4",
     "react-native-lifx": "^0.6.10",
     "react-native-network-info": "^4.0.1",
-    "react-native-udp": "^2.6.0"
+    "react-native-super-grid": "^3.0.4",
+    "react-native-udp": "^2.6.0",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",

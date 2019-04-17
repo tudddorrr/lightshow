@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View, TouchableHighlight, Dimensions } from 'react-native'
+import theme from '../theme'
 
 export default class ActionButton extends React.Component {
   constructor(props) {
@@ -7,13 +8,16 @@ export default class ActionButton extends React.Component {
     this.state = {
       timeouts: []
     }
+
+    this.go = this.go.bind(this)
   }
 
   render() {
+    const { sequence } = this.props
     return (
-      <TouchableHighlight onPress={() => this.go()}>
-        <View style={[styles.button, {backgroundColor: this.props.sequence.colour}]}>
-          <Text style={{color: 'white', fontSize: 16, textAlign: 'center'}}>{this.props.sequence.label}</Text>
+      <TouchableHighlight onPress={this.go}>
+        <View style={[styles.button, {backgroundColor: sequence.colour}]}>
+          <Text style={styles.label}>{sequence.label}</Text>
         </View>
       </TouchableHighlight>
     )
@@ -38,7 +42,7 @@ export default class ActionButton extends React.Component {
         this.getLight(action.light).color(Number(colour[0]), Number(colour[1]), Number(colour[2]), Number(colour[3]), 50)
 
         // loop it?
-        if(this.props.sequence.loop && actionsExecuted===this.props.sequence.actions.length) {
+        if(this.props.sequence.loop && actionsExecuted === this.props.sequence.actions.length) {
           this.go()
         }
       }, Number(action.delay))
@@ -66,9 +70,13 @@ export default class ActionButton extends React.Component {
 
 const styles = StyleSheet.create({
   button: {
-    width: Dimensions.get('window').width/3,
-    height: Dimensions.get('window').width/3,
+    height: 100,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
+  },
+  label: {
+    color: theme.colours.white,
+    fontSize: theme.fonts.md,
+    textAlign: 'center'
   }
 })

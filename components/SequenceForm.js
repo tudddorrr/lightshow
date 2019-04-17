@@ -1,6 +1,8 @@
 import React from 'react'
 import { StyleSheet, View, Modal, Text, TouchableHighlight, ScrollView, TextInput, Switch } from 'react-native'
 import ActionBit from './ActionBit'
+import theme from '../theme'
+import uuid from 'uuid/v4'
 
 export default class ActionForm extends React.Component {
   constructor(props) {
@@ -10,84 +12,113 @@ export default class ActionForm extends React.Component {
       loop: false,
       actions: []
     }
+
+    this.handleNameInput = this.handleNameInput.bind(this)
+    this.handleLoop = this.handleLoop.bind(this)
+    this.newAction = this.newAction.bind(this)
+    this.saveAction = this.saveAction.bind(this)
+    this.deleteAction = this.deleteAction.bind(this)
   }
 
   render() {
+    const {
+      label,
+      loop,
+      actions
+    } = this.state
+
+    const {
+      visible,
+      close,
+      save,
+      lights
+    } = this.props
+
     return (
       <Modal
-        animationType="slide"
+        animationType='slide'
         transparent={false}
-        visible={this.props.visible}
+        visible={visible}
         onRequestClose={() => {
-          this.props.close()
+          close()
         }}>
         <View style={styles.container}>
-          <TextInput style={{color: 'black', marginBottom: 12, fontSize: 28}} 
-                       onChangeText={t => this.setState({label: t})} 
-                       placeholder='Sequence name'
-                       value={this.state.label} 
-                       underlineColorAndroid='rgba(0, 0, 0, 0.35)' 
-                       placeholderTextColor='rgba(0, 0, 0, 0.35)' />
-
-          <View style={styles.loopBox}>
-            <Switch onValueChange={loop => this.setState({loop})} value={this.state.loop} />
-            <Text>Loop?</Text>
-          </View>
-
-          <TouchableHighlight onPress={() => this.newAction()}>
-            <Text style={[styles.button, {flex: null}]}>+ New Action</Text>
-          </TouchableHighlight>
-
-          <ScrollView style={{marginVertical: 4}}>
-            {
-              this.state.actions.map((action, index) => {
-                return <ActionBit key={index} action={action} lights={this.props.lights} save={this.saveAction.bind(this)} />
-              })
-            }
-          </ScrollView>
-
           <View style={styles.buttons}>
-            <TouchableHighlight onPress={() => this.props.save(this.state)}>
-              <Text style={[styles.button, {marginRight: 16}]}>Add</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight onPress={() => this.props.close()}>
+            <TouchableHighlight onPress={() => close()}>
               <Text style={styles.button}>Close</Text>
             </TouchableHighlight>
+
+            <TouchableHighlight onPress={this.newAction}>
+              <Text style={styles.button}>+ New Action</Text>
+            </TouchableHighlight>
+
+            <TouchableHighlight onPress={() => save(this.state)}>
+              <Text style={styles.button}>Done</Text>
+            </TouchableHighlight>
           </View>
+
+          <View style={styles.nameLoopContainer}>
+            <TextInput style={styles.nameInput}
+              onChangeText={this.handleNameInput}
+              placeholder='Sequence name'
+              value={label}
+              underlineColorAndroid={theme.colours.grey1}
+              placeholderTextColor={theme.colours.grey1}
+            />
+
+            <View style={styles.loopBox}>
+              <Text style={styles.sliderLabel}>Loop</Text>
+              <Switch 
+                onValueChange={this.handleLoop}
+                value={loop}
+              />
+            </View>
+          </View>
+
+          <ScrollView>
+            {actions.map(action => {
+              return (
+                <ActionBit
+                  key={action.id}
+                  action={action}
+                  lights={lights}
+                  handleSave={this.saveAction}
+                  handleDelete={this.deleteAction}
+                />
+              )
+            })}
+          </ScrollView>
         </View>
       </Modal>
     )
+  }
+
+  handleNameInput(label) {
+    this.setState({ label })
+  }
+
+  handleLoop(loop) {
+    this.setState({ loop })
   }
 
   newAction() {
     let actions = this.state.actions
 
     actions.push({
-      id: this.guid(),
+      id: uuid(),
       light: null,
       colour: null,
       delay: null
     })
 
-    this.setState({actions})
-  }
-
-  guid() {
-    return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4()
-  }
-
-  s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1)
+    this.setState({ actions })
   }
 
   saveAction(action) {
     let actions = this.state.actions
 
     actions.forEach(a => {
-      if(a.id===action.id) {
+      if (a.id === action.id) {
         a.light = action.light
         a.colour = action.colour
         a.delay = action.delay
@@ -95,28 +126,54 @@ export default class ActionForm extends React.Component {
       }
     })
 
-    this.setState({actions})
+    this.setState({ actions })
+  }
+
+  deleteAction(id) {
+    this.setState({
+      actions: this.state.actions.filter(a => a.id !== id)
+    })
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-around',
-    padding: 16
+    padding: theme.spacing.md,
+    marginTop: theme.spacing.lg
   },
   buttons: {
+    height: theme.sizes.md,
     flexDirection: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'space-between'
   },
   button: {
     flex: 1,
-    padding: 8,
     textAlign: 'center',
-    fontSize: 16
+    fontSize: theme.fonts.md
+  },
+  nameLoopContainer: {
+    height: theme.sizes.md,    
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-around'
   },
   loopBox: {
+    flex: 1,
     flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignItems: 'center'
+  },
+  sliderLabel: {
+    marginRight: theme.spacing.sm
+  },
+  nameInput: {
+    flex: 2,
+    color: 'black',
+    fontSize: theme.fonts.lg
+  },
+  actions: {
+    flex: 1,
+    justifyContent: 'flex-start'
   }
 })

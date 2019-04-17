@@ -1,6 +1,8 @@
 import React from 'react'
-import { StyleSheet, Text, View, TextInput, Picker, TouchableHighlight, Slider } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Picker, TouchableHighlight } from 'react-native'
+import Slider from '@react-native-community/slider'
 import { hsbToRGB, getLuminosity } from '../utils/colours'
+import theme from '../theme'
 
 export default class ActionBit extends React.Component {
   constructor(props) {
@@ -13,24 +15,60 @@ export default class ActionBit extends React.Component {
       k: 2500,
       delay: null
     }
+
+    this.tileColour = this.tileColour.bind(this)
+    this.checkLuminosity = this.checkLuminosity.bind(this)
+    this.getTextColour = this.getTextColour.bind(this)
+    this.getSoftTextColour = this.getSoftTextColour.bind(this)
+    this.setLight = this.setLight.bind(this)
+    this.setHue = this.setHue.bind(this)
+    this.setSaturation = this.setSaturation.bind(this)
+    this.setBrightness = this.setBrightness.bind(this)
+    this.setKelvin = this.setKelvin.bind(this)
+    this.setDelay = this.setDelay.bind(this)
+    this.handleSave = this.handleSave.bind(this)
+    this.handleEdit = this.handleEdit.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
   }
 
   render() {
+    const {
+      light,
+      h,
+      s,
+      b,
+      k,
+      delay
+    } = this.state
+
+    const {
+      action,
+      lights,
+      handleDelete
+    } = this.props
+
     return (
       <View style={[styles.action, {backgroundColor: 'rgb(' + this.tileColour() + ')'}]}>
         <View>
           <Text style={[styles.heading, {color: this.getTextColour()}]}>Light</Text>
-          {
-            this.props.action.light ? 
-            <Text style={{color: this.getTextColour()}}>{this.props.action.light}</Text>
+          {action.light
+            ? <Text style={{color: this.getTextColour()}}>{action.light}</Text>
             :
             <View>
-              <Picker style={{color: this.getTextColour()}} selectedValue={this.state.light} onValueChange={val => this.setState({light: val})} mode='dropdown'>
-                {
-                  this.props.lights.map(light => {
-                    return <Picker.Item key={light.label} label={light.label} value={light.label} />
-                  })
-                }
+              <Picker
+                style={{color: this.getTextColour()}}
+                selectedValue={light}
+                onValueChange={this.setLight}
+                mode='dropdown'>
+                {lights.map(light => {
+                  return (
+                    <Picker.Item
+                      key={light.label}
+                      label={light.label}
+                      value={light.label}
+                    />
+                  )
+                })}
               </Picker>
             </View>
           }
@@ -38,38 +76,36 @@ export default class ActionBit extends React.Component {
 
         <View style={styles.colourBit}>
           <Text style={[styles.heading, {color: this.getTextColour()}]}>Colour</Text>
-          {
-            this.props.action.colour ? 
-            <Text style={{color: this.getTextColour()}}>{this.props.action.colour}</Text> 
+          {action.colour
+            ? <Text style={{color: this.getTextColour()}}>{action.colour}</Text> 
             :
             <View>
               <Text style={{color: this.getSoftTextColour()}}>Hue</Text>
-              {this.slider(h => this.setState({h: Math.round(h)}), 0, 360, this.state.h)}
+              {this.slider(this.setHue, 0, 360, h)}
 
               <Text style={{color: this.getSoftTextColour()}}>Saturation</Text>
-              {this.slider(s => this.setState({s: Math.round(s)}), 0, 100, this.state.s)}
+              {this.slider(this.setSaturation, 0, 100, s)}
 
               <Text style={{color: this.getSoftTextColour()}}>Brightness</Text>
-              {this.slider(b => this.setState({b: Math.round(b)}), 0, 100, this.state.b)}
+              {this.slider(this.setBrightness, 0, 100, b)}
 
               <Text style={{color: this.getSoftTextColour()}}>Kelvin</Text>
-              {this.slider(k => this.setState({k: Math.round(k)}), 2500, 9000, this.state.k)}
+              {this.slider(this.setKelvin, 2500, 9000, k)}
             </View>
           }
         </View>
 
         <View>
           <Text style={[styles.heading, {color: this.getTextColour()}]}>After</Text>
-          {
-            this.props.action.delay ? 
-            <Text style={{color: this.getTextColour()}}>{this.props.action.delay}ms</Text>
+          {action.delay
+            ? <Text style={{color: this.getTextColour()}}>{action.delay}ms</Text>
             :
             <View>
               <TextInput 
                 style={{color: this.getTextColour()}} 
-                onChangeText={delay => this.setState({delay})} 
+                onChangeText={this.setDelay} 
                 placeholder='Delay (ms relative to first action)'
-                value={this.state.delay} 
+                value={delay} 
                 keyboardType='numeric' 
                 underlineColorAndroid={this.getSoftTextColour()} 
                 placeholderTextColor={this.getSoftTextColour()} />
@@ -77,13 +113,19 @@ export default class ActionBit extends React.Component {
           }
         </View>
 
-        {
-          this.props.action.light && this.props.action.colour && this.props.action.delay ? 
-          <TouchableHighlight onPress={() => this.edit()}>
-            <Text style={[styles.actionButton, {color: this.getTextColour()}]}>Edit</Text>
-          </TouchableHighlight>
+        {action.light && action.colour
+          ?
+          <View style={styles.editDeleteWrapper}>
+            <TouchableHighlight onPress={this.handleEdit}>
+              <Text style={[styles.actionButton, {color: this.getTextColour()}]}>Edit</Text>
+            </TouchableHighlight>
+
+            <TouchableHighlight onPress={this.handleDelete}>
+              <Text style={[styles.actionButton, {color: this.getTextColour()}]}>Delete</Text>
+            </TouchableHighlight>
+          </View>
           :
-          <TouchableHighlight onPress={() => this.save()}>
+          <TouchableHighlight onPress={this.handleSave}>
             <Text style={[styles.actionButton, {color: this.getTextColour()}]}>Save</Text>
           </TouchableHighlight>
         }
@@ -92,14 +134,20 @@ export default class ActionBit extends React.Component {
   }
 
   slider(onChange, minVal, maxVal, value) {
-    return <Slider 
-              style={{marginBottom: 4}} 
-              onSlidingComplete={onChange} 
-              minimumValue={minVal} 
-              maximumValue={maxVal} 
-              value={value} 
-              minimumTrackTintColor={this.getSoftTextColour()} 
-              thumbTintColor={this.getTextColour()} />
+    return (
+      <Slider 
+        onSlidingComplete={onChange} 
+        minimumValue={minVal} 
+        maximumValue={maxVal} 
+        value={value} 
+        minimumTrackTintColor={this.getSoftTextColour()} 
+        thumbTintColor={this.getTextColour()}
+      />
+    )
+  }
+
+  tileColour() {
+    return this.props.action.tileColour || hsbToRGB(this.state.h || 0, this.state.s || 0, this.state.b || 100)
   }
 
   checkLuminosity() {
@@ -116,8 +164,32 @@ export default class ActionBit extends React.Component {
     return this.checkLuminosity() > 186 ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)'
   }
 
-  save() {
-    this.props.save({
+  setLight(light) {
+    this.setState({light})
+  }
+
+  setHue(h) {
+    this.setState({h: Math.round(h)})
+  }
+
+  setSaturation(s) {
+    this.setState({s: Math.round(s)})
+  }
+
+  setBrightness(b) {
+    this.setState({b: Math.round(b)})
+  }
+
+  setKelvin(k) {
+    this.setState({k: Math.round(k)})
+  }
+
+  setDelay(delay) {
+    this.setState({delay})
+  }
+
+  handleSave() {
+    this.props.handleSave({
       id: this.props.action.id,
       light: this.state.light,
       colour: (this.state.h || 0) + '/' + (this.state.s || 0) + '/' + (this.state.b || 100) + '/' + (this.state.k || 9000),
@@ -126,8 +198,8 @@ export default class ActionBit extends React.Component {
     })
   }
 
-  edit() {
-    this.props.save({
+  handleEdit() {
+    this.props.handleSave({
       id: this.props.action.id,
       light: null,
       colour: null,
@@ -136,31 +208,39 @@ export default class ActionBit extends React.Component {
     })
   }
 
-  tileColour() {
-    return this.props.action.tileColour || hsbToRGB(this.state.h || 0, this.state.s || 0, this.state.b || 100)
+  handleDelete() {
+    this.props.handleDelete(this.props.action.id)
   }
 }
 
 const styles = StyleSheet.create({
   action: {
     borderWidth: 1,
-    borderColor: '#eee',
-    marginTop: 8,
-    padding: 12
+    borderColor: theme.colours.grey3,
+    marginTop: theme.spacing.sm,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius
   },
   colourBit: {
-    marginVertical: 8
+    marginVertical: theme.spacing.sm
   },
   heading: {
-    fontSize: 16,
-    color: 'black',
+    fontSize: theme.fonts.md,
+    color: theme.colours.black,
     fontWeight: 'bold'
   },
   actionButton: {
     flex: 1,
     alignSelf: 'center', 
-    marginTop: 8,
+    marginTop: theme.spacing.sm,
     fontWeight: 'bold',
-    padding: 4,
+    padding: theme.spacing.xs,
+    fontSize: theme.fonts.md
+  },
+  editDeleteWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: theme.spacing.sm
   }
 })

@@ -1,5 +1,5 @@
-export const getLuminosity = (rgb) => {
-  return (rgb[0]*0.299 + rgb[1]*0.587 + rgb[2]*0.114)
+export const getLuminosity = rgb => {
+  return rgb[0]*0.299 + rgb[1]*0.587 + rgb[2]*0.114
 }
 
 export const hsbToRGB = (h, s, v) => {
@@ -9,7 +9,7 @@ export const hsbToRGB = (h, s, v) => {
 
   let r, g, b
 
-  let i = Math.floor(h * 6);
+  let i = Math.floor(h * 6)
   let f = h * 6 - i
   let p = v * (1 - s)
   let q = v * (1 - f * s)
