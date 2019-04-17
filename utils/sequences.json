@@ -1,5 +1,6 @@
 [
   {
+    "id": "aaa",
     "label": "Leather Teeth",
     "colour": "rgb(200, 40, 180)",
     "loop": false,
@@ -107,6 +108,7 @@
     ]
   },
   {
+    "id": "ddd",
     "label": "Red",
     "colour": "rgb(200, 0, 0)",
     "loop": false,
@@ -124,6 +126,7 @@
     ]
   },
   {
+    "id": "bbb",
     "label": "Purple",
     "colour": "rgb(150, 50, 200)",
     "loop": false,
@@ -141,6 +144,7 @@
     ]
   },
   {
+    "id": "ccc",
     "label": "White",
     "colour": "rgb(150, 150, 150)",
     "loop": false,
@@ -148,12 +152,14 @@
       {
         "light": "Tudor's Bedside",
         "colour": "0/0/100/9000",
-        "delay": 0
+        "delay": 0,
+        "transition": 3000
       },
       {
         "light": "Natalie's Bedside",
         "colour": "0/0/100/9000",
-        "delay": 0
+        "delay": 0,
+        "transition": 5000
       }
     ]
   }

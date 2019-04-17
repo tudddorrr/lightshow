@@ -1,14 +1,14 @@
 import React from 'react'
 import { StyleSheet, View, Modal, Text, TouchableHighlight, ScrollView, TextInput, Switch } from 'react-native'
-import ActionBit from './ActionBit'
+import Action from './Action'
 import theme from '../theme'
 import uuid from 'uuid/v4'
 
-export default class ActionForm extends React.Component {
+export default class SequenceForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      label: '',
+      label: null,
       loop: false,
       actions: []
     }
@@ -78,7 +78,7 @@ export default class ActionForm extends React.Component {
           <ScrollView>
             {actions.map(action => {
               return (
-                <ActionBit
+                <Action
                   key={action.id}
                   action={action}
                   lights={lights}
@@ -105,10 +105,7 @@ export default class ActionForm extends React.Component {
     let actions = this.state.actions
 
     actions.push({
-      id: uuid(),
-      light: null,
-      colour: null,
-      delay: null
+      id: uuid()
     })
 
     this.setState({ actions })
@@ -121,7 +118,8 @@ export default class ActionForm extends React.Component {
       if (a.id === action.id) {
         a.light = action.light
         a.colour = action.colour
-        a.delay = action.delay
+        a.delay = action.delay,
+        a.transition = action.transition,
         a.tileColour = action.tileColour
       }
     })

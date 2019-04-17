@@ -3,7 +3,7 @@ import './shim'
 import React from 'react'
 import { StyleSheet, View, Text, TouchableHighlight, ScrollView } from 'react-native'
 import { Client } from 'react-native-lifx'
-import SequenceButton from './components/SequenceButton'
+import Sequence from './components/Sequence'
 import SequenceForm from './components/SequenceForm'
 import sequences from './utils/sequences'
 import randColour from 'randomcolor'
@@ -51,7 +51,7 @@ export default class App extends React.Component {
             items={sequences}
             style={styles.actionsContainer}
             renderItem={({ item }) => (
-              <SequenceButton
+              <Sequence
                 sequence={item}
                 lights={lights}
               />
@@ -84,9 +84,13 @@ export default class App extends React.Component {
     let sequences = this.state.sequences
     sequences.push({
       ...sequence,
-      colour: randColour(),
+      colour: randColour()
     })
     this.setState({ sequences, showModal: false })
+  }
+
+  deleteSequence(sequenceID) {
+
   }
 }
 

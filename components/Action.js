@@ -13,7 +13,9 @@ export default class ActionBit extends React.Component {
       s: 0,
       b: 100,
       k: 2500,
-      delay: null
+      delay: 0,
+      transition: 0,
+      editing: true
     }
 
     this.tileColour = this.tileColour.bind(this)
@@ -26,6 +28,7 @@ export default class ActionBit extends React.Component {
     this.setBrightness = this.setBrightness.bind(this)
     this.setKelvin = this.setKelvin.bind(this)
     this.setDelay = this.setDelay.bind(this)
+    this.setTransition = this.setTransition.bind(this)
     this.handleSave = this.handleSave.bind(this)
     this.handleEdit = this.handleEdit.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
@@ -38,20 +41,21 @@ export default class ActionBit extends React.Component {
       s,
       b,
       k,
-      delay
+      delay,
+      transition,
+      editing
     } = this.state
 
     const {
       action,
-      lights,
-      handleDelete
+      lights
     } = this.props
 
     return (
       <View style={[styles.action, {backgroundColor: 'rgb(' + this.tileColour() + ')'}]}>
         <View>
           <Text style={[styles.heading, {color: this.getTextColour()}]}>Light</Text>
-          {action.light
+          {!editing
             ? <Text style={{color: this.getTextColour()}}>{action.light}</Text>
             :
             <View>
@@ -76,7 +80,7 @@ export default class ActionBit extends React.Component {
 
         <View style={styles.colourBit}>
           <Text style={[styles.heading, {color: this.getTextColour()}]}>Colour</Text>
-          {action.colour
+          {!editing
             ? <Text style={{color: this.getTextColour()}}>{action.colour}</Text> 
             :
             <View>
@@ -97,7 +101,7 @@ export default class ActionBit extends React.Component {
 
         <View>
           <Text style={[styles.heading, {color: this.getTextColour()}]}>After</Text>
-          {action.delay
+          {!editing
             ? <Text style={{color: this.getTextColour()}}>{action.delay}ms</Text>
             :
             <View>
@@ -105,7 +109,7 @@ export default class ActionBit extends React.Component {
                 style={{color: this.getTextColour()}} 
                 onChangeText={this.setDelay} 
                 placeholder='Delay (ms relative to first action)'
-                value={delay} 
+                value={`${delay}`} 
                 keyboardType='numeric' 
                 underlineColorAndroid={this.getSoftTextColour()} 
                 placeholderTextColor={this.getSoftTextColour()} />
@@ -113,7 +117,25 @@ export default class ActionBit extends React.Component {
           }
         </View>
 
-        {action.light && action.colour
+        <View>
+          <Text style={[styles.heading, {color: this.getTextColour()}]}>Transition</Text>
+          {!editing
+            ? <Text style={{color: this.getTextColour()}}>{action.transition}ms</Text>
+            :
+            <View>
+              <TextInput 
+                style={{color: this.getTextColour()}} 
+                onChangeText={this.setTransition} 
+                placeholder='Transition (ms)'
+                value={`${transition}`} 
+                keyboardType='numeric' 
+                underlineColorAndroid={this.getSoftTextColour()} 
+                placeholderTextColor={this.getSoftTextColour()} />
+            </View>
+          }
+        </View>
+
+        {!editing
           ?
           <View style={styles.editDeleteWrapper}>
             <TouchableHighlight onPress={this.handleEdit}>
@@ -188,23 +210,28 @@ export default class ActionBit extends React.Component {
     this.setState({delay})
   }
 
+  setTransition(transition) {
+    this.setState({transition})
+  }
+
   handleSave() {
+    this.setState({
+      editing: false
+    })
+
     this.props.handleSave({
       id: this.props.action.id,
       light: this.state.light,
       colour: (this.state.h || 0) + '/' + (this.state.s || 0) + '/' + (this.state.b || 100) + '/' + (this.state.k || 9000),
-      delay: this.state.delay,
+      delay: this.state.delay || 0,
+      transition: this.state.transition || 0,
       tileColour: hsbToRGB(this.state.h || 0, this.state.s || 0, this.state.b || 100)
     })
   }
 
   handleEdit() {
-    this.props.handleSave({
-      id: this.props.action.id,
-      light: null,
-      colour: null,
-      delay: null,
-      tileColour: hsbToRGB(this.state.h || 0, this.state.s || 0, this.state.b || 100)
+    this.setState({
+      editing: !this.state.editing
     })
   }
 
@@ -227,7 +254,8 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: theme.fonts.md,
     color: theme.colours.black,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginTop: theme.spacing.small
   },
   actionButton: {
     flex: 1,

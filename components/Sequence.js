@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableHighlight, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, TouchableHighlight } from 'react-native'
 import theme from '../theme'
 
 export default class ActionButton extends React.Component {
@@ -35,11 +35,11 @@ export default class ActionButton extends React.Component {
         actionsExecuted++
 
         // turn it on
-        this.getLight(action.light).on()
+        this.getLight(action.light).on(Number(action.transition))
 
         // set the colour
         let colour = action.colour.split('/')
-        this.getLight(action.light).color(Number(colour[0]), Number(colour[1]), Number(colour[2]), Number(colour[3]), 50)
+        this.getLight(action.light).color(Number(colour[0]), Number(colour[1]), Number(colour[2]), Number(colour[3]), Number(action.transition))
 
         // loop it?
         if(this.props.sequence.loop && actionsExecuted === this.props.sequence.actions.length) {
