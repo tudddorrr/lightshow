@@ -1,10 +1,9 @@
 import React from 'react'
-import sequences from '../utils/sequences.json'
 import actionTypes from './actionTypes'
 
 export const initialState = {
   lights: [],
-  sequences,
+  sequences: [],
   timeouts: []
 }
 

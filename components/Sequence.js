@@ -1,6 +1,6 @@
 import React, { useState, useContext, useCallback, useEffect } from 'react'
 import { Context } from '../store/store'
-import { StyleSheet, Text, View, TouchableHighlight } from 'react-native'
+import { StyleSheet, Text, View, TouchableHighlight, Dimensions } from 'react-native'
 import theme from '../theme'
 import { clearTimeouts, addTimeout } from '../store/actions'
 
@@ -41,7 +41,7 @@ export default props => {
           action.colour.saturation,
           action.colour.brightness,
           action.colour.kelvin,
-          action.colour.transition
+          action.transition
         )
 
         // loop it?
@@ -75,10 +75,10 @@ export default props => {
 
 const styles = StyleSheet.create({
   button: {
-    height: theme.sizes.lg,
+    width: Dimensions.get('window').width/3,
+    height: Dimensions.get('window').width/3,
     alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: theme.borderRadius
+    justifyContent: 'center'
   },
   label: {
     color: theme.colours.white,

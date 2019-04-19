@@ -6,6 +6,7 @@ import theme from '../theme'
 import uuid from 'uuid/v4'
 import { storeSequences } from '../store/actions'
 import randomColor from 'randomcolor'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default props => {
   const { store, dispatch } = useContext(Context)
@@ -64,12 +65,34 @@ export default props => {
       label,
       loop,
       actions,
-      tileColour: props.sequence ? props.sequence.tileColour : randomColor()
+      tileColour: props.sequence ? props.sequence.tileColour : randomColor(),
+      createdDateTime: props.sequence ? props.sequence.createdDateTime : new Date()
     })
+
+    saveSequences(newSequences)
+
     dispatch(storeSequences(newSequences))
 
     props.close()
   }, [label, loop, actions])
+
+  const deleteSequence = useCallback(() => {
+    let newSequences = sequences
+    if(props.sequence) newSequences = newSequences.filter(sequence => sequence.id !== props.sequence.id)
+    saveSequences(newSequences)
+
+    dispatch(storeSequences(newSequences))
+
+    props.close()
+  }, [label, loop, actions])
+
+  const saveSequences = async sequences => {
+    try {
+      await AsyncStorage.setItem('sequences', JSON.stringify(sequences))
+    } catch (e) {
+      console.warn(e)
+    }
+  }
 
   return (
     <Modal
@@ -82,6 +105,12 @@ export default props => {
           <TouchableHighlight onPress={() => props.close()}>
             <Text style={styles.button}>Cancel</Text>
           </TouchableHighlight>
+
+          {props.sequence &&
+            <TouchableHighlight onPress={deleteSequence}>
+              <Text style={styles.button}>Delete</Text>
+            </TouchableHighlight>
+          }
 
           <TouchableHighlight onPress={saveSequence}>
             <Text style={styles.button}>Save</Text>

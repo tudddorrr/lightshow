@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Context } from '../store/store'
-import { addLight } from '../store/actions'
+import { addLight, storeSequences } from '../store/actions'
 import { StyleSheet, View, Text, TouchableHighlight } from 'react-native'
 import { Client } from 'react-native-lifx'
 import Sequence from './Sequence'
 import SequenceForm from './SequenceForm'
 import theme from '../theme'
-import { FlatGrid } from 'react-native-super-grid'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export default () => {
   const { store, dispatch } = useContext(Context)
@@ -14,6 +14,19 @@ export default () => {
 
   const [showModal, setShowModal] = useState(false)
   const [editingSequence, setEditingSequence] = useState(null)
+
+  const getSequences = async () => {
+    try {
+      const value = await AsyncStorage.getItem('sequences')
+      if(value !== null) dispatch(storeSequences(JSON.parse(value)))
+    } catch(e) {
+      console.warn(e)
+    }
+  }
+
+  useEffect(() => {
+    getSequences()
+  }, [])
 
   useEffect(() => {
     if(!showModal) {
@@ -42,19 +55,23 @@ export default () => {
     client.init()
   }, [])
 
+  const sortedSequences = sequences.sort((a, b) => {
+    return new Date(b.createdDateTime) - new Date(a.createdDateTime)
+  })
+
   return (
     <View style={styles.container}>
-      <FlatGrid
-        itemDimension={theme.sizes.xl}
-        items={sequences}
-        style={styles.actionsContainer}
-        renderItem={({ item }) => (
-          <Sequence
-            sequence={item}
-            editSequence={sequence => setEditingSequence(sequence)}
-          />
-        )}
-      />
+      <View style={styles.actionsContainer}>
+        {sortedSequences.map(sequence => {
+          return (
+            <Sequence
+              key={sequence.id}
+              sequence={sequence}
+              editSequence={sequence => setEditingSequence(sequence)}
+            />
+          )
+        })}
+      </View>
 
       {showModal &&
         <SequenceForm
@@ -78,7 +95,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   actionsContainer: {
-    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginTop: theme.spacing.lg
   },
   newAction: {

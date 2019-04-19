@@ -16,7 +16,7 @@ export default props => {
   const [kelvin, setKelvin] = useState(2500)
   const [delay, setDelay] = useState(0)
   const [transition, setTransition] = useState(0)
-  const [editing, setEditing] = useState(true)
+  const [editing, setEditing] = useState(false)
 
   useEffect(() => {
     setLight(props.action.light)
@@ -42,7 +42,7 @@ export default props => {
   }
 
   const tileColour = () => {
-    return props.action.tileColour || hsbToRGB(hue, saturation, brightness)
+    return hsbToRGB(hue, saturation, brightness)
   }
 
   const checkLuminosity = () => {
@@ -72,8 +72,7 @@ export default props => {
         kelvin
       },
       delay: delay || 0,
-      transition: transition || 0,
-      tileColour: tileColour()
+      transition: transition || 0
     })
   })
 
