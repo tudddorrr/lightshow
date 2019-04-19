@@ -1,165 +1,371 @@
 [
   {
-    "id": "aaa",
+    "id": "lt",
     "label": "Leather Teeth",
-    "colour": "rgb(200, 40, 180)",
+    "tileColour": "rgb(200, 40, 180)",
     "loop": false,
     "actions": [
       {
         "light": "Tudor's Bedside",
-        "colour": "0/100/100/9000",
-        "delay": 100
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 100,
+        "transition": 100        
       },
       {
         "light": "Tudor's Bedside",
-        "colour": "0/100/10/9000",
-        "delay": 200
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 10,
+          "kelvin": 9000
+        },
+        "delay": 200,
+        "transition": 100
       },
       {
         "light": "Tudor's Bedside",
-        "colour": "0/100/100/9000",
-        "delay": 300
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 300,
+        "transition": 100
       },
       {
         "light": "Tudor's Bedside",
-        "colour": "0/0/10/9000",
-        "delay": 400
+        "colour": {
+          "hue": 0,
+          "saturation": 0,
+          "brightness": 10,
+          "kelvin": 9000
+        },
+        "delay": 400,
+        "transition": 100
       },
       {
         "light": "Tudor's Bedside",
-        "colour": "0/0/100/9000",
-        "delay": 500
+        "colour": {
+          "hue": 0,
+          "saturation": 0,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 500,
+        "transition": 100
       },
       {
         "light": "Tudor's Bedside",
-        "colour": "0/0/10/9000",
-        "delay": 600
+        "colour": {
+          "hue": 0,
+          "saturation": 0,
+          "brightness": 10,
+          "kelvin": 9000
+        },
+        "delay": 600,
+        "transition": 100
       },
       {
         "light": "Tudor's Bedside",
-        "colour": "0/100/100/9000",
-        "delay": 700
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 700,
+        "transition": 100
       },
       {
         "light": "Tudor's Bedside",
-        "colour": "0/100/10/9000",
-        "delay": 800
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 10,
+          "kelvin": 9000
+        },
+        "delay": 800,
+        "transition": 100
       },
       {
         "light": "Tudor's Bedside",
-        "colour": "0/100/100/9000",
-        "delay": 900
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 900,
+        "transition": 100
       },
       {
         "light": "Tudor's Bedside",
-        "colour": "0/100/10/9000",
-        "delay": 1000
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 10,
+          "kelvin": 9000
+        },
+        "delay": 1000,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/100/10/9000",
-        "delay": 100
+        "colour": {
+          "hue": 260,
+          "saturation": 100,
+          "brightness": 10,
+          "kelvin": 9000
+        },
+        "delay": 100,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/100/100/9000",
-        "delay": 200
+        "colour": {
+          "hue": 260,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 200,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/100/10/9000",
-        "delay": 300
+        "colour": {
+          "hue": 260,
+          "saturation": 100,
+          "brightness": 10,
+          "kelvin": 9000
+        },
+        "delay": 300,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/0/100/9000",
-        "delay": 400
+        "colour": {
+          "hue": 260,
+          "saturation": 0,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 400,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/0/10/9000",
-        "delay": 500
+        "colour": {
+          "hue": 260,
+          "saturation": 0,
+          "brightness": 10,
+          "kelvin": 9000
+        },
+        "delay": 500,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/0/100/9000",
-        "delay": 600
+        "colour": {
+          "hue": 260,
+          "saturation": 0,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 600,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/100/10/9000",
-        "delay": 700
+        "colour": {
+          "hue": 260,
+          "saturation": 100,
+          "brightness": 10,
+          "kelvin": 9000
+        },
+        "delay": 700,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/100/100/9000",
-        "delay": 800
+        "colour": {
+          "hue": 260,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 800,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/100/10/9000",
-        "delay": 900
+        "colour": {
+          "hue": 260,
+          "saturation": 100,
+          "brightness": 10,
+          "kelvin": 9000
+        },
+        "delay": 900,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/100/100/9000",
-        "delay": 1000
+        "colour": {
+          "hue": 260,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 1000,
+        "transition": 100
       }
     ]
   },
   {
-    "id": "ddd",
+    "id": "r",
     "label": "Red",
-    "colour": "rgb(200, 0, 0)",
+    "tileColour": "rgb(200, 0, 0)",
     "loop": false,
     "actions": [
       {
         "light": "Tudor's Bedside",
-        "colour": "0/100/100/9000",
-        "delay": 0
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 0,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "0/100/0/9000",
-        "delay": 0
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 0,
+          "kelvin": 9000
+        },
+        "delay": 0,
+        "transition": 100
       }
     ]
   },
   {
-    "id": "bbb",
+    "id": "p",
     "label": "Purple",
-    "colour": "rgb(150, 50, 200)",
+    "tileColour": "rgb(150, 50, 200)",
     "loop": false,
     "actions": [
       {
         "light": "Tudor's Bedside",
-        "colour": "0/100/0/9000",
-        "delay": 0
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 0,
+          "kelvin": 9000
+        },
+        "delay": 0,
+        "transition": 100
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "260/100/100/9000",
-        "delay": 0
+        "colour": {
+          "hue": 260,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 0,
+        "transition": 100
       }
     ]
   },
   {
-    "id": "ccc",
+    "id": "w",
     "label": "White",
-    "colour": "rgb(150, 150, 150)",
+    "tileColour": "rgb(150, 150, 150)",
     "loop": false,
     "actions": [
       {
         "light": "Tudor's Bedside",
-        "colour": "0/0/100/9000",
+        "colour": {
+          "hue": 0,
+          "saturation": 0,
+          "brightness": 100,
+          "kelvin": 9000
+        },
         "delay": 0,
         "transition": 3000
       },
       {
         "light": "Natalie's Bedside",
-        "colour": "0/0/100/9000",
+        "colour": {
+          "hue": 0,
+          "saturation": 0,
+          "brightness": 100,
+          "kelvin": 9000
+        },
         "delay": 0,
         "transition": 5000
+      }
+    ]
+  },
+  {
+    "id": "pr",
+    "label": "Purple Red",
+    "tileColour": "rgb(150, 150, 150)",
+    "loop": true,
+    "actions": [
+      {
+        "light": "Tudor's Bedside",
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 0,
+          "kelvin": 9000
+        },
+        "delay": 0,
+        "transition": 100
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": {
+          "hue": 260,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 100,
+        "transition": 100
+      },
+      {
+        "light": "Tudor's Bedside",
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 100,
+          "kelvin": 9000
+        },
+        "delay": 200,
+        "transition": 100
+      },
+      {
+        "light": "Natalie's Bedside",
+        "colour": {
+          "hue": 0,
+          "saturation": 100,
+          "brightness": 0,
+          "kelvin": 9000
+        },
+        "delay": 300,
+        "transition": 100
       }
     ]
   }

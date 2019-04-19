@@ -1,78 +1,84 @@
-import React from 'react'
+import React, { useState, useContext, useCallback, useEffect } from 'react'
+import { Context } from '../store/store'
 import { StyleSheet, Text, View, TouchableHighlight } from 'react-native'
 import theme from '../theme'
+import { clearTimeouts, addTimeout } from '../store/actions'
 
-export default class ActionButton extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      timeouts: []
+export default props => {
+  const { store, dispatch } = useContext(Context)
+  const lights = store.lights
+  const timeouts = store.timeouts
+
+  const [loop, setLoop] = useState(false)
+  
+  const getLight = label => {
+    for(light of lights) {
+      if(light.label === label) return light
     }
-
-    this.go = this.go.bind(this)
   }
 
-  render() {
-    const { sequence } = this.props
-    return (
-      <TouchableHighlight onPress={this.go}>
-        <View style={[styles.button, {backgroundColor: sequence.colour}]}>
-          <Text style={styles.label}>{sequence.label}</Text>
-        </View>
-      </TouchableHighlight>
-    )
+  const clearOtherTimeouts = light => {
+    for(t of timeouts) {
+      if(t.light === light && t.sequenceId !== props.sequence.id) {
+        clearTimeout(t.timeoutId)
+      }
+    }
   }
 
-  go() {
-    // clear all previous timeouts
-    this.clearStateTimeouts()
-    let timeouts = []
-    let actionsExecuted = 0
+  const go = useCallback(() => {
+    const sequence = props.sequence
 
-    this.props.sequence.actions.forEach(action => {
-      let t = setTimeout(() => {
-        // how many actions we've executed so far (for looping)
-        actionsExecuted++
+    sequence.actions.forEach((action, index) => {
+      // clear all previous timeouts
+      clearOtherTimeouts(action.light)
+      dispatch(clearTimeouts(action.light, sequence.id))
 
-        // turn it on
-        this.getLight(action.light).on(Number(action.transition))
-
+      let timeoutId = setTimeout(() => {
         // set the colour
-        let colour = action.colour.split('/')
-        this.getLight(action.light).color(Number(colour[0]), Number(colour[1]), Number(colour[2]), Number(colour[3]), Number(action.transition))
+        getLight(action.light).on(Number(action.transition))
+        getLight(action.light).color(
+          action.colour.hue,
+          action.colour.saturation,
+          action.colour.brightness,
+          action.colour.kelvin,
+          action.colour.transition
+        )
 
         // loop it?
-        if(this.props.sequence.loop && actionsExecuted === this.props.sequence.actions.length) {
-          this.go()
+        if (sequence.loop && index === sequence.actions.length - 1) {
+          setLoop(true)
         }
-      }, Number(action.delay))
+      }, action.delay)
 
-      timeouts.push(t)
+      dispatch(addTimeout(action.light, sequence.id, timeoutId))
     })
+  })
 
-    this.setState({timeouts})
-  }
-
-  getLight(label) {
-    for(let l of this.props.lights) {
-      if(l.label===label) return l
+  useEffect(() => {
+    if(loop) {
+      go()
+      setLoop(false)
     }
-  }
+  }, [loop])
 
-  clearStateTimeouts() {
-    this.state.timeouts.forEach(t => {
-      clearTimeout(t)
-    })
-
-    this.setState({timeouts: []})
-  }
+  return (
+    <TouchableHighlight
+      onPress={() => go()}
+      onLongPress={() => props.editSequence(props.sequence)}
+    >
+      <View style={[styles.button, { backgroundColor: props.sequence.tileColour }]}>
+        <Text style={styles.label}>{props.sequence.label}</Text>
+      </View>
+    </TouchableHighlight>
+  )
 }
 
 const styles = StyleSheet.create({
   button: {
-    height: 100,
+    height: theme.sizes.lg,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderRadius: theme.borderRadius
   },
   label: {
     color: theme.colours.white,

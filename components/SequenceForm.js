@@ -1,137 +1,133 @@
-import React from 'react'
+import React, { useState, useCallback, useContext, useEffect } from 'react'
+import { Context } from '../store/store'
 import { StyleSheet, View, Modal, Text, TouchableHighlight, ScrollView, TextInput, Switch } from 'react-native'
 import Action from './Action'
 import theme from '../theme'
 import uuid from 'uuid/v4'
+import { storeSequences } from '../store/actions'
+import randomColor from 'randomcolor'
 
-export default class SequenceForm extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      label: null,
-      loop: false,
-      actions: []
+export default props => {
+  const { store, dispatch } = useContext(Context)
+  const lights = store.lights
+  const sequences = store.sequences
+
+  const [label, setLabel] = useState('')
+  const [loop, setLoop] = useState(false)
+  const [actions, setActions] = useState([])
+
+  useEffect(() => {
+    if(props.sequence) {
+      setLabel(props.sequence.label)
+      setLoop(props.sequence.loop)
+      setActions(props.sequence.actions)
     }
+  }, [])
 
-    this.handleNameInput = this.handleNameInput.bind(this)
-    this.handleLoop = this.handleLoop.bind(this)
-    this.newAction = this.newAction.bind(this)
-    this.saveAction = this.saveAction.bind(this)
-    this.deleteAction = this.deleteAction.bind(this)
-  }
+  const addAction = useCallback(() => {
+    setActions([
+      ...actions,
+      {
+        id: uuid(),
+        light: lights[0].label,
+        colour: {
+          hue: 0,
+          saturation: 0,
+          brightness: 100,
+          kelvin: 2500
+        },
+        delay: 0,
+        transition: 0
+      }
+    ])
+  }, [actions])
 
-  render() {
-    const {
+  const saveAction = useCallback(action => {
+    setActions(actions.map(a => {
+      if(action.id === a.id) {
+        return action
+      } else {
+        return a
+      }
+    }))
+  }, [actions])
+
+  const deleteAction = useCallback(action => {
+    setActions(actions.filter(a => action.id !== action.id))
+  }, [actions])
+
+  const saveSequence = useCallback(() => {
+    let newSequences = sequences
+    if(props.sequence) newSequences = newSequences.filter(sequence => sequence.id !== props.sequence.id)
+    newSequences.push({
+      id: props.sequence ? props.sequence.id : uuid(),
       label,
       loop,
-      actions
-    } = this.state
+      actions,
+      tileColour: props.sequence ? props.sequence.tileColour : randomColor()
+    })
+    dispatch(storeSequences(newSequences))
 
-    const {
-      visible,
-      close,
-      save,
-      lights
-    } = this.props
+    props.close()
+  }, [label, loop, actions])
 
-    return (
-      <Modal
-        animationType='slide'
-        transparent={false}
-        visible={visible}
-        onRequestClose={() => {
-          close()
-        }}>
-        <View style={styles.container}>
-          <View style={styles.buttons}>
-            <TouchableHighlight onPress={() => close()}>
-              <Text style={styles.button}>Close</Text>
-            </TouchableHighlight>
+  return (
+    <Modal
+      animationType='slide'
+      transparent={false}
+      visible={props.visible}
+      onRequestClose={() => props.close()}>
+      <View style={styles.container}>
+        <View style={styles.buttons}>
+          <TouchableHighlight onPress={() => props.close()}>
+            <Text style={styles.button}>Cancel</Text>
+          </TouchableHighlight>
 
-            <TouchableHighlight onPress={this.newAction}>
-              <Text style={styles.button}>+ New Action</Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight onPress={() => save(this.state)}>
-              <Text style={styles.button}>Done</Text>
-            </TouchableHighlight>
-          </View>
-
-          <View style={styles.nameLoopContainer}>
-            <TextInput style={styles.nameInput}
-              onChangeText={this.handleNameInput}
-              placeholder='Sequence name'
-              value={label}
-              underlineColorAndroid={theme.colours.grey1}
-              placeholderTextColor={theme.colours.grey1}
-            />
-
-            <View style={styles.loopBox}>
-              <Text style={styles.sliderLabel}>Loop</Text>
-              <Switch 
-                onValueChange={this.handleLoop}
-                value={loop}
-              />
-            </View>
-          </View>
-
-          <ScrollView>
-            {actions.map(action => {
-              return (
-                <Action
-                  key={action.id}
-                  action={action}
-                  lights={lights}
-                  handleSave={this.saveAction}
-                  handleDelete={this.deleteAction}
-                />
-              )
-            })}
-          </ScrollView>
+          <TouchableHighlight onPress={saveSequence}>
+            <Text style={styles.button}>Save</Text>
+          </TouchableHighlight>
         </View>
-      </Modal>
-    )
-  }
 
-  handleNameInput(label) {
-    this.setState({ label })
-  }
+        <View style={styles.nameLoopContainer}>
+          <TextInput style={styles.nameInput}
+            onChangeText={text => setLabel(text)}
+            placeholder='Sequence name'
+            value={label}
+            underlineColorAndroid={theme.colours.grey1}
+            placeholderTextColor={theme.colours.grey1}
+          />
 
-  handleLoop(loop) {
-    this.setState({ loop })
-  }
+          <View style={styles.loopBox}>
+            <Text style={styles.sliderLabel}>Loop</Text>
+            <Switch 
+              onValueChange={loop => setLoop(loop)}
+              value={loop}
+            />
+          </View>
+        </View>
 
-  newAction() {
-    let actions = this.state.actions
+        <View style={styles.newAction}>
+          <TouchableHighlight onPress={addAction}>
+            <Text style={styles.button}>+ New Action</Text>
+          </TouchableHighlight>
+        </View>
 
-    actions.push({
-      id: uuid()
-    })
-
-    this.setState({ actions })
-  }
-
-  saveAction(action) {
-    let actions = this.state.actions
-
-    actions.forEach(a => {
-      if (a.id === action.id) {
-        a.light = action.light
-        a.colour = action.colour
-        a.delay = action.delay,
-        a.transition = action.transition,
-        a.tileColour = action.tileColour
-      }
-    })
-
-    this.setState({ actions })
-  }
-
-  deleteAction(id) {
-    this.setState({
-      actions: this.state.actions.filter(a => a.id !== id)
-    })
-  }
+        <ScrollView>
+          {actions.map(action => {
+            return (
+              <Action
+                key={action.id}
+                action={action}
+                lights={lights}
+                saveAction={saveAction}
+                deleteAction={deleteAction}
+              />
+            )
+          })}
+        </ScrollView>
+      </View>
+    </Modal>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -151,7 +147,7 @@ const styles = StyleSheet.create({
     fontSize: theme.fonts.md
   },
   nameLoopContainer: {
-    height: theme.sizes.md,    
+    marginTop: theme.spacing.md,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-around'
@@ -173,5 +169,11 @@ const styles = StyleSheet.create({
   actions: {
     flex: 1,
     justifyContent: 'flex-start'
+  },
+  newAction: {
+    marginTop: theme.spacing.md,
+    height: theme.sizes.md,
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 })
